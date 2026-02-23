@@ -22,4 +22,6 @@ const connectDB = async () => {
     }
 };
 
-export default connectDB
+// cpnnectDB return a promise
+
+export default connectDB 
