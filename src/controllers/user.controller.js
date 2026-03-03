@@ -163,7 +163,9 @@ const logoutUser = asyncHandler(async(req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: { refreshToken: undefined }
+      $unset: { refreshToken: 1 // this remove the field from document
+
+      }
     },
     {
       new: true
@@ -268,7 +270,7 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     req.user?._id,
     {
       $set: {
-        fullName,
+        fullName: fullName,
         email: email
       }
     },
@@ -295,7 +297,7 @@ const updateUserAvatar = asyncHandler(async(req, res) =>{
     throw new ApiError(400, "Error while uploading in avatar")
   }
 
-  const user = await findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set:{
@@ -325,7 +327,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) =>{
     throw new ApiError(400, "Error while uploading in CoverImage")
   }
 
-  const user = await findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set:{

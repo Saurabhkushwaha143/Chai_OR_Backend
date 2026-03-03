@@ -63,6 +63,7 @@ userSchema.methods.isPasswordCorrect = async function(password){
 }
 
 userSchema.methods.genrateAccessToken = function(){
+    // console.log("Access Expiry:", process.env.ACCESS_TOKEN_EXPIRY);
     return jwt.sign(
         {
             _id: this._id,
@@ -70,6 +71,7 @@ userSchema.methods.genrateAccessToken = function(){
             username: this.username,
             fullName: this.fullName
         },
+       
         process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY

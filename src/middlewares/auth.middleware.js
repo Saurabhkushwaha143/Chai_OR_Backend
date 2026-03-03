@@ -5,7 +5,7 @@ import { User } from "../models/user.model.js"
 
 export const verifyJWT = asyncHandler(async(req, res, next) => {
    try {
-    const token =  req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+    const token =  req.cookies?.accessToken || (req.headers.authorization?.startsWith("Bearer ")? req.headers.authorization.split(" ")[1]: null)
    //  console.log("AUTH HEADER:", req.headers.authorization);
     if(!token){
      throw new ApiError(401, "Unauthorized request")
@@ -23,7 +23,10 @@ export const verifyJWT = asyncHandler(async(req, res, next) => {
     req.user = user;
     next()
    } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid Access Token")
+      if (error.name === "TokenExpiredError") {
+       throw new ApiError(401, "Access token expired")
+   }
+    throw new ApiError(401, "Invalid or expired access token")
    }
 
 })
